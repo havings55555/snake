@@ -88,12 +88,23 @@
         const startBtn = document.getElementById('startBtn');
 
         // 음식 위치 랜덤 생성
-        function generateFood() {
-            food = {
-                x: Math.floor((Math.random() * canvas.width) / gridSize) * gridSize,
-                y: Math.floor((Math.random() * canvas.height) / gridSize) * gridSize,
-            };
-        }
+function generateFood() {
+    let foodX, foodY;
+    
+    // 음식이 꼭짓점에 생성되지 않도록 위치 생성
+    do {
+        foodX = Math.floor((Math.random() * canvas.width) / gridSize) * gridSize;
+        foodY = Math.floor((Math.random() * canvas.height) / gridSize) * gridSize;
+    } while (
+        (foodX === 0 && foodY === 0) || // 왼쪽 상단 꼭짓점
+        (foodX === canvas.width - gridSize && foodY === 0) || // 오른쪽 상단 꼭짓점
+        (foodX === 0 && foodY === canvas.height - gridSize) || // 왼쪽 하단 꼭짓점
+        (foodX === canvas.width - gridSize && foodY === canvas.height - gridSize) // 오른쪽 하단 꼭짓점
+    );
+    
+    food = { x: foodX, y: foodY };
+}
+
 
         // 방향 버튼 클릭 처리
         document.getElementById('up').addEventListener('click', () => {
