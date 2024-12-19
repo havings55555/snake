@@ -80,6 +80,7 @@
         const gridSize = 20; // 그리드 크기
         let snake = [{ x: 200, y: 200 }]; // 뱀 초기 위치
         let direction = { x: gridSize, y: 0 }; // 초기 방향 (오른쪽으로 시작)
+        let nextDirection = { x: gridSize, y: 0 }; // 다음 방향
         let food = { x: 100, y: 100 }; // 음식 초기 위치
         let score = 0;
 
@@ -88,43 +89,52 @@
         const startBtn = document.getElementById('startBtn');
 
         // 음식 위치 랜덤 생성
-function generateFood() {
-    let foodX, foodY;
-    
-    // 음식이 꼭짓점에 생성되지 않도록 위치 생성
-    do {
-        foodX = Math.floor((Math.random() * canvas.width) / gridSize) * gridSize;
-        foodY = Math.floor((Math.random() * canvas.height) / gridSize) * gridSize;
-    } while (
-        (foodX === 0 && foodY === 0) || // 왼쪽 상단 꼭짓점
-        (foodX === canvas.width - gridSize && foodY === 0) || // 오른쪽 상단 꼭짓점
-        (foodX === 0 && foodY === canvas.height - gridSize) || // 왼쪽 하단 꼭짓점
-        (foodX === canvas.width - gridSize && foodY === canvas.height - gridSize) // 오른쪽 하단 꼭짓점
-    );
-    
-    food = { x: foodX, y: foodY };
-}
-
+        function generateFood() {
+            food = {
+                x: Math.floor((Math.random() * canvas.width) / gridSize) * gridSize,
+                y: Math.floor((Math.random() * canvas.height) / gridSize) * gridSize,
+            };
+        }
 
         // 방향 버튼 클릭 처리
         document.getElementById('up').addEventListener('click', () => {
-            if (direction.y === 0) direction = { x: 0, y: -gridSize };
+            if (direction.y === 0) nextDirection = { x: 0, y: -gridSize };
         });
 
         document.getElementById('down').addEventListener('click', () => {
-            if (direction.y === 0) direction = { x: 0, y: gridSize };
+            if (direction.y === 0) nextDirection = { x: 0, y: gridSize };
         });
 
         document.getElementById('left').addEventListener('click', () => {
-            if (direction.x === 0) direction = { x: -gridSize, y: 0 };
+            if (direction.x === 0) nextDirection = { x: -gridSize, y: 0 };
         });
 
         document.getElementById('right').addEventListener('click', () => {
-            if (direction.x === 0) direction = { x: gridSize, y: 0 };
+            if (direction.x === 0) nextDirection = { x: gridSize, y: 0 };
+        });
+
+        // 키보드 화살표 입력 처리
+        document.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowUp':
+                    if (direction.y === 0) nextDirection = { x: 0, y: -gridSize };
+                    break;
+                case 'ArrowDown':
+                    if (direction.y === 0) nextDirection = { x: 0, y: gridSize };
+                    break;
+                case 'ArrowLeft':
+                    if (direction.x === 0) nextDirection = { x: -gridSize, y: 0 };
+                    break;
+                case 'ArrowRight':
+                    if (direction.x === 0) nextDirection = { x: gridSize, y: 0 };
+                    break;
+            }
         });
 
         // 게임 업데이트
         function update() {
+            direction = nextDirection; // 입력된 방향 적용
+
             const head = {
                 x: snake[0].x + direction.x,
                 y: snake[0].y + direction.y,
