@@ -37,17 +37,39 @@
             margin: 5px;
             cursor: pointer;
         }
+
+        .start-btn {
+            font-size: 20px;
+            padding: 15px;
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .start-btn:hover {
+            background-color: #45a049;
+        }
+
+        #gameArea {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <h1>Snake Game</h1>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-    
-    <div class="controls">
-        <button class="arrow-button" id="up">↑</button><br>
-        <button class="arrow-button" id="left">←</button>
-        <button class="arrow-button" id="right">→</button><br>
-        <button class="arrow-button" id="down">↓</button>
+    <button class="start-btn" id="startBtn">Start Game</button>
+
+    <div id="gameArea">
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <div class="controls">
+            <button class="arrow-button" id="up">↑</button><br>
+            <button class="arrow-button" id="left">←</button>
+            <button class="arrow-button" id="right">→</button><br>
+            <button class="arrow-button" id="down">↓</button>
+        </div>
     </div>
 
     <script>
@@ -60,6 +82,10 @@
         let direction = { x: gridSize, y: 0 }; // 초기 방향 (오른쪽으로 시작)
         let food = { x: 100, y: 100 }; // 음식 초기 위치
         let score = 0;
+
+        // 게임 영역 숨기기
+        const gameArea = document.getElementById('gameArea');
+        const startBtn = document.getElementById('startBtn');
 
         // 음식 위치 랜덤 생성
         function generateFood() {
@@ -145,8 +171,17 @@
             setTimeout(gameLoop, 100); // 속도 조절 (ms)
         }
 
-        generateFood();
-        gameLoop();
+        // 게임 시작 버튼 클릭 시
+        startBtn.addEventListener('click', () => {
+            // 게임 영역 보이게 하기
+            gameArea.style.display = 'block';
+
+            // 시작 버튼 숨기기
+            startBtn.style.display = 'none';
+
+            generateFood();
+            gameLoop();
+        });
     </script>
 </body>
 </html>
