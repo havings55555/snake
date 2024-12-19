@@ -24,11 +24,32 @@
             margin: auto;
             display: block;
         }
+
+        .controls {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+        }
+
+        .arrow-button {
+            font-size: 20px;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <h1>Snake Game</h1>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
+    
+    <div class="controls">
+        <button class="arrow-button" id="up">↑</button><br>
+        <button class="arrow-button" id="left">←</button>
+        <button class="arrow-button" id="right">→</button><br>
+        <button class="arrow-button" id="down">↓</button>
+    </div>
+
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -36,7 +57,7 @@
         // 게임 설정
         const gridSize = 20; // 그리드 크기
         let snake = [{ x: 200, y: 200 }]; // 뱀 초기 위치
-        let direction = { x: 0, y: 0 }; // 초기 방향
+        let direction = { x: gridSize, y: 0 }; // 초기 방향 (오른쪽으로 시작)
         let food = { x: 100, y: 100 }; // 음식 초기 위치
         let score = 0;
 
@@ -48,22 +69,21 @@
             };
         }
 
-        // 키 입력 처리
-        document.addEventListener('keydown', (e) => {
-            switch (e.key) {
-                case 'ArrowUp':
-                    if (direction.y === 0) direction = { x: 0, y: -gridSize };
-                    break;
-                case 'ArrowDown':
-                    if (direction.y === 0) direction = { x: 0, y: gridSize };
-                    break;
-                case 'ArrowLeft':
-                    if (direction.x === 0) direction = { x: -gridSize, y: 0 };
-                    break;
-                case 'ArrowRight':
-                    if (direction.x === 0) direction = { x: gridSize, y: 0 };
-                    break;
-            }
+        // 방향 버튼 클릭 처리
+        document.getElementById('up').addEventListener('click', () => {
+            if (direction.y === 0) direction = { x: 0, y: -gridSize };
+        });
+
+        document.getElementById('down').addEventListener('click', () => {
+            if (direction.y === 0) direction = { x: 0, y: gridSize };
+        });
+
+        document.getElementById('left').addEventListener('click', () => {
+            if (direction.x === 0) direction = { x: -gridSize, y: 0 };
+        });
+
+        document.getElementById('right').addEventListener('click', () => {
+            if (direction.x === 0) direction = { x: gridSize, y: 0 };
         });
 
         // 게임 업데이트
